@@ -22,6 +22,7 @@
     'data': [
         'security/security_groups.xml',
         'security/ir.model.access.csv',
+        'security/record_rules.xml',
         'data/sequence_data.xml',
         'data/cron_data.xml',
         'views/department_views.xml',
