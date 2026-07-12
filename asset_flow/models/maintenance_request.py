@@ -62,12 +62,20 @@ class AssetFlowMaintenanceRequest(models.Model):
                 'approved_by': self.env.user.id,
             })
             record.asset_id.write({'state': 'maintenance'})
+            record.message_post(
+                body='<b>Approved by</b> %s' % self.env.user.name,
+                message_type='notification',
+            )
 
     def action_reject(self):
         self.write({
             'status': 'rejected',
             'approved_by': self.env.user.id,
         })
+        self.message_post(
+            body='<b>Rejected by</b> %s' % self.env.user.name,
+            message_type='notification',
+        )
 
     def action_assign_technician(self):
         self.write({'status': 'technician_assigned'})
@@ -82,3 +90,7 @@ class AssetFlowMaintenanceRequest(models.Model):
                 'resolution_date': fields.Date.context_today(self),
             })
             record.asset_id.write({'state': 'available'})
+            record.message_post(
+                body='<b>Resolved:</b> %s' % (record.resolution_notes or 'No notes provided.'),
+                message_type='notification',
+            )

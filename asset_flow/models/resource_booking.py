@@ -70,12 +70,27 @@ class AssetFlowBooking(models.Model):
     def action_confirm_booking(self):
         self.write({'status': 'ongoing'})
         self.resource_id.write({'state': 'reserved'})
+        self.message_post(
+            body='<b>Booking Started:</b> %s booked by %s' % (
+                self.resource_id.name, self.employee_id.name),
+            message_type='notification',
+        )
 
     def action_complete_booking(self):
         self.write({'status': 'completed'})
         self.resource_id.write({'state': 'available'})
+        self.message_post(
+            body='<b>Booking Completed:</b> %s returned by %s' % (
+                self.resource_id.name, self.employee_id.name),
+            message_type='notification',
+        )
 
     def action_cancel_booking(self):
         self.write({'status': 'cancelled'})
         if self.resource_id.state == 'reserved':
             self.resource_id.write({'state': 'available'})
+        self.message_post(
+            body='<b>Booking Cancelled:</b> %s was cancelled by %s' % (
+                self.resource_id.name, self.employee_id.name),
+            message_type='notification',
+        )
