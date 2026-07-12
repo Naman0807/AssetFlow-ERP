@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AssetFlow — Manual Test Report</title>
+<style>
+:root {
+  --bg-primary: #0f1117;
+  --bg-secondary: #1a1d27;
+  --bg-card: #21252f;
+  --bg-hover: #2a2f3a;
+  --text-primary: #e8eaed;
+  --text-secondary: #9aa0a6;
+  --text-muted: #6b7280;
+  --border: #2d3340;
+  --accent: #6c5ce7;
+  --accent-light: #a29bfe;
+  --green: #00b894;
+  --blue: #0984e3;
+  --orange: #e17055;
+  --red: #d63031;
+  --yellow: #fdcb6e;
+  --radius: 10px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+[data-theme="light"] {
+  --bg-primary: #f5f6fa;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-hover: #f0f1f5;
+  --text-primary: #1a1d27;
+  --text-secondary: #555b6e;
+  --text-muted: #8b92a5;
+  --border: #e0e3e8;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  transition: background 0.3s, color 0.3s;
+}
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  backdrop-filter: blur(12px);
+}
+
+.header-left { display: flex; align-items: center; gap: 16px; }
+
+.logo {
+  font-size: 20px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+}
+
+.progress-wrap { display: flex; align-items: center; gap: 12px; }
+
+.progress-bar-container {
+  width: 220px;
+  height: 8px;
+  background: var(--bg-primary);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--green));
+  border-radius: 4px;
+  transition: width 0.5s ease;
+  width: 0%;
+}
+
+.progress-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  min-width: 100px;
+  text-align: right;
+}
+
+.header-right { display: flex; align-items: center; gap: 10px; }
+
+.btn {
+  padding: 7px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.btn:hover { background: var(--bg-hover); }
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.btn-primary:hover { opacity: 0.85; }
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px 80px;
+}
+
+.section {
+  margin-bottom: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+}
+
+.section-header:hover { background: var(--bg-hover); }
+
+.section-title {
+  font-size: 17px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-title .icon { font-size: 20px; }
+
+.section-badge {
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--accent);
+  color: #fff;
+  padding: 2px 9px;
+  border-radius: 20px;
+}
+
+.section-chevron {
+  transition: transform 0.3s;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.section.collapsed .section-chevron { transform: rotate(-90deg); }
+.section.collapsed .section-body { display: none; }
+
+.section-body { padding: 0 20px 20px; }
+
+.card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+
+.card:last-child { margin-bottom: 0; }
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.stat-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+
+.stat-card .stat-value {
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stat-card .stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+.setup-steps { list-style: none; counter-reset: step; }
+.setup-steps li {
+  counter-increment: step;
+  padding: 8px 0 8px 40px;
+  position: relative;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+.setup-steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 26px;
+  height: 26px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+code {
+  background: var(--bg-primary);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: var(--accent-light);
+  border: 1px solid var(--border);
+}
+
+.module-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-light);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin: 16px 0 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.module-label:first-child { margin-top: 0; }
+
+.route-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  transition: background 0.15s;
+  flex-wrap: wrap;
+}
+
+.route-row:hover { background: var(--bg-hover); }
+
+.route-path {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 160px;
+}
+
+.route-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  flex: 1;
+  min-width: 180px;
+}
+
+.route-verify {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+  min-width: 200px;
+}
+
+.link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+.link-btn:hover { opacity: 0.8; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+th {
+  text-align: left;
+  padding: 10px 12px;
+  background: var(--bg-primary);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  border-bottom: 2px solid var(--border);
+  position: sticky;
+  top: 60px;
+}
+
+td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+tr:hover td { background: var(--bg-hover); }
+
+.method-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: monospace;
+  min-width: 56px;
+  text-align: center;
+  color: #fff;
+}
+
+.method-GET { background: var(--green); }
+.method-POST { background: var(--blue); }
+.method-PATCH { background: var(--orange); }
+.method-DELETE { background: var(--red); }
+
+.role-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+.api-path {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.feature-group { margin-bottom: 16px; }
+.feature-group:last-child { margin-bottom: 0; }
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.feature-item:hover { background: var(--bg-hover); }
+
+.feature-item label {
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.feature-item input[type="checkbox"],
+.api-table input[type="checkbox"],
+.route-check {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg-primary);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.feature-item input[type="checkbox"]:checked,
+.api-table input[type="checkbox"]:checked,
+.route-check:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.feature-item input[type="checkbox"]:checked::after,
+.api-table input[type="checkbox"]:checked::after,
+.route-check:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.feature-item input[type="checkbox"]:checked + span,
+.feature-item input[type="checkbox"]:checked ~ .feature-label {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.api-table { margin-top: 8px; }
+.api-table td:first-child { width: 40px; text-align: center; }
+
+.db-table-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin: 4px;
+  font-size: 13px;
+  font-family: monospace;
+}
+
+.db-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.reset-btn {
+  padding: 6px 12px;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.reset-btn:hover { opacity: 0.8; }
+
+.api-table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.table-container {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.table-container table { margin: 0; }
+
+@media print {
+  .sticky-header { position: static; }
+  .btn, .reset-btn, .link-btn, .section-chevron { display: none !important; }
+  .section.collapsed .section-body { display: block !important; }
+  .section { break-inside: avoid; }
+  body { background: #fff; color: #000; }
+  .progress-bar-container { display: none; }
+}
+
+@media (max-width: 768px) {
+  .overview-grid { grid-template-columns: 1fr 1fr; }
+  .route-row { flex-direction: column; align-items: flex-start; }
+  .route-verify, .route-desc { min-width: unset; }
+  .sticky-header { padding: 10px 14px; }
+  .container { padding: 14px 10px 60px; }
+  .progress-bar-container { width: 120px; }
+  th, td { padding: 7px 8px; font-size: 12px; }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.search-box {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 14px;
+  margin-bottom: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.search-box:focus { border-color: var(--accent); }
+.search-box::placeholder { color: var(--text-muted); }
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.summary-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+
+.summary-card .num {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--accent-light);
+}
+
+.summary-card .lbl {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.progress-big {
+  width: 100%;
+  height: 24px;
+  background: var(--bg-primary);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 16px;
+  border: 1px solid var(--border);
+}
+
+.progress-big-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--green));
+  border-radius: 12px;
+  transition: width 0.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  min-width: 40px;
+}
+</style>
+</head>
+<body>
+
+<div class="sticky-header">
+  <div class="header-left">
+    <div class="logo">AssetFlow Test Report</div>
+    <div class="progress-wrap">
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="globalProgress"></div>
+      </div>
+      <span class="progress-text" id="globalProgressText">0 / 0</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <input type="text" class="search-box" id="searchBox" placeholder="Search routes, endpoints, features..." style="width:220px;margin:0;">
+    <button class="btn" onclick="toggleTheme()">Toggle Theme</button>
+    <button class="btn btn-primary" onclick="exportReport()">Export Report</button>
+    <button class="reset-btn" onclick="resetAll()">Reset All</button>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ==================== SECTION 1: OVERVIEW ==================== -->
+<div class="section" id="sec-overview">
+  <div class="section-header" onclick="toggleSection('sec-overview')">
+    <div class="section-title"><span class="icon">📋</span> Section 1: Project Overview</div>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="card">
+      <h3 style="font-size:15px;margin-bottom:12px;color:var(--accent-light);">Tech Stack</h3>
+      <div class="overview-grid">
+        <div class="stat-card">
+          <div class="stat-value" style="font-size:20px;">Next.js 14</div>
+          <div class="stat-label">Frontend Framework</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="font-size:20px;">TypeScript</div>
+          <div class="stat-label">Language</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="font-size:20px;">Supabase</div>
+          <div class="stat-label">Backend & Database</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="font-size:20px;">Tailwind CSS</div>
+          <div class="stat-label">Styling</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="font-size:20px;">Shadcn/UI</div>
+          <div class="stat-label">Component Library</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="font-size:20px;">React Query</div>
+          <div class="stat-label">Data Fetching</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:15px;margin-bottom:12px;color:var(--accent-light);">Default Ports</h3>
+      <p style="font-size:14px;color:var(--text-secondary);margin-bottom:6px;">
+        <strong>Web App (Frontend):</strong> <code>http://localhost:3000</code><br>
+        <strong>API Server:</strong> <code>http://localhost:3001</code><br>
+        <strong>Supabase Studio:</strong> <code>http://localhost:54323</code> (if using local Supabase)
+      </p>
+    </div>
+    <div class="card">
+      <h3 style="font-size:15px;margin-bottom:12px;color:var(--accent-light);">Setup Instructions</h3>
+      <ol class="setup-steps">
+        <li>Clone the repository and install dependencies: <code>npm install</code></li>
+        <li>Set up environment variables: copy <code>.env.example</code> to <code>.env.local</code> and fill in Supabase keys</li>
+        <li>Run database migrations / seed data in Supabase dashboard</li>
+        <li>Start the API server: <code>npm run dev:api</code> (runs on port 3001)</li>
+        <li>Start the web frontend: <code>npm run dev</code> (runs on port 3000)</li>
+        <li>Create a test admin account via <code>/register</code> or seed script</li>
+        <li>Log in and begin testing each section below</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECTION 2: FRONTEND ROUTES ==================== -->
+<div class="section" id="sec-routes">
+  <div class="section-header" onclick="toggleSection('sec-routes')">
+    <div class="section-title"><span class="icon">🔗</span> Section 2: Frontend Routes</div>
+    <span class="section-badge" id="routesBadge">0 / 0</span>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body" id="routesBody">
+  </div>
+</div>
+
+<!-- ==================== SECTION 3: API ENDPOINTS ==================== -->
+<div class="section" id="sec-api">
+  <div class="section-header" onclick="toggleSection('sec-api')">
+    <div class="section-title"><span class="icon">⚡</span> Section 3: API Endpoints</div>
+    <span class="section-badge" id="apiBadge">0 / 0</span>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body" id="apiBody">
+  </div>
+</div>
+
+<!-- ==================== SECTION 4: FEATURES CHECKLIST ==================== -->
+<div class="section" id="sec-features">
+  <div class="section-header" onclick="toggleSection('sec-features')">
+    <div class="section-title"><span class="icon">✅</span> Section 4: Features Checklist</div>
+    <span class="section-badge" id="featuresBadge">0 / 0</span>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body" id="featuresBody">
+  </div>
+</div>
+
+<!-- ==================== SECTION 5: DATABASE SCHEMA ==================== -->
+<div class="section" id="sec-db">
+  <div class="section-header" onclick="toggleSection('sec-db')">
+    <div class="section-title"><span class="icon">🗄️</span> Section 5: Database Schema Check</div>
+    <span class="section-badge" id="dbBadge">0 / 0</span>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body" id="dbBody">
+  </div>
+</div>
+
+<!-- ==================== SECTION 6: SUMMARY ==================== -->
+<div class="section" id="sec-summary">
+  <div class="section-header" onclick="toggleSection('sec-summary')">
+    <div class="section-title"><span class="icon">📊</span> Section 6: Summary Stats</div>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="summary-grid" id="summaryGrid"></div>
+    <div class="progress-big">
+      <div class="progress-big-bar" id="summaryProgressBar">0%</div>
+    </div>
+    <div style="text-align:center;margin-top:10px;">
+      <button class="btn" onclick="window.print()" style="margin-right:8px;">🖨️ Print Report</button>
+      <button class="btn btn-primary" onclick="exportReport()">📄 Export as HTML</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const BASE = 'http://localhost:3000';
+const API_BASE = 'http://localhost:3001';
+
+const STORAGE_KEY = 'assetflow_test_report_state';
+
+function loadState() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  } catch { return {}; }
+}
+
+function saveState(state) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+let state = loadState();
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+  localStorage.setItem('assetflow_theme', html.getAttribute('data-theme'));
+}
+
+function toggleSection(id) {
+  document.getElementById(id).classList.toggle('collapsed');
+}
+
+function resetAll() {
+  if (confirm('Reset ALL checkboxes? This cannot be undone.')) {
+    state = {};
+    saveState(state);
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+    updateProgress();
+  }
+}
+
+function exportReport() {
+  const html = document.documentElement.outerHTML;
+  const blob = new Blob(['<!DOCTYPE html>\n' + html], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'AssetFlow-Test-Report.html';
+  a.click();
+}
+
+function updateProgress() {
+  const all = document.querySelectorAll('input[type="checkbox"]');
+  const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+  const total = all.length;
+  const done = checked.length;
+  const pct = total ? Math.round((done / total) * 100) : 0;
+
+  document.getElementById('globalProgress').style.width = pct + '%';
+  document.getElementById('globalProgressText').textContent = done + ' / ' + total + ' (' + pct + '%)';
+
+  const sp = document.getElementById('summaryProgressBar');
+  if (sp) {
+    sp.style.width = pct + '%';
+    sp.textContent = pct + '%';
+  }
+
+  document.querySelectorAll('.section').forEach(sec => {
+    const badge = sec.querySelector('.section-badge');
+    if (!badge) return;
+    const sectionCbs = sec.querySelectorAll('input[type="checkbox"]');
+    const sectionChecked = sec.querySelectorAll('input[type="checkbox"]:checked');
+    badge.textContent = sectionChecked.length + ' / ' + sectionCbs.length;
+  });
+
+  const summaryStats = document.getElementById('summaryStats');
+  if (summaryStats) {
+    summaryStats.textContent = done + ' / ' + total;
+  }
+
+  const summaryPct = document.getElementById('summaryPct');
+  if (summaryPct) {
+    summaryPct.textContent = pct + '%';
+  }
+}
+
+function createCheckbox(id) {
+  const cb = document.createElement('input');
+  cb.type = 'checkbox';
+  cb.className = 'route-check';
+  cb.dataset.id = id;
+  cb.checked = !!state[id];
+  cb.addEventListener('change', function() {
+    state[this.dataset.id] = this.checked;
+    saveState(state);
+    updateProgress();
+  });
+  return cb;
+}
+
+// ===================== ROUTES DATA =====================
+const routes = {
+  'Auth': [
+    { path: '/login', desc: 'User login page with email/password form', verify: 'Check form validation, error messages, redirect on success' },
+    { path: '/register', desc: 'User registration page with role selection', verify: 'Check role dropdown, field validation, account creation flow' },
+  ],
+  'Dashboard': [
+    { path: '/dashboard', desc: 'Main dashboard with KPI cards and activity feed', verify: 'Verify all KPI cards load, activity feed populates, responsive layout' },
+  ],
+  'Assets': [
+    { path: '/assets', desc: 'Asset registry listing all assets with search and filters', verify: 'Verify table loads, pagination works, filters apply correctly' },
+    { path: '/assets/new', desc: 'Create new asset form', verify: 'Check all form fields, category dropdown, validation, submission' },
+    { path: '/assets/[id]', desc: 'Asset detail page with full lifecycle info', verify: 'Verify all tabs load, history timeline, allocation status' },
+  ],
+  'Allocations': [
+    { path: '/allocations', desc: 'All allocations listing with status filters', verify: 'Verify status badges, date ranges, asset/user links work' },
+    { path: '/allocations/new', desc: 'Create new allocation form', verify: 'Check conflict detection, date picker, asset/user selection' },
+  ],
+  'Bookings': [
+    { path: '/bookings', desc: 'Resource bookings listing', verify: 'Verify calendar/list view toggle, status display, overlap indicators' },
+    { path: '/bookings/new', desc: 'Create new booking', verify: 'Check overlap validation, duration calculation, purpose field' },
+  ],
+  'Maintenance': [
+    { path: '/maintenance', desc: 'Maintenance requests and work orders', verify: 'Verify state machine badges, priority levels, assignment status' },
+    { path: '/maintenance/new', desc: 'Create new maintenance request', verify: 'Check asset picker, priority selector, description field, cost estimate' },
+  ],
+  'Transfers': [
+    { path: '/transfers', desc: 'Asset transfer pipeline with approval workflow', verify: 'Verify approve/reject buttons, status flow, department assignment' },
+  ],
+  'Audits': [
+    { path: '/audits', desc: 'Audit cycles listing', verify: 'Verify cycle status, assigned auditors, progress bars' },
+    { path: '/audits/[id]', desc: 'Audit detail with item checklists', verify: 'Verify item list loads, condition grading, photo upload, close audit' },
+  ],
+  'Activity Log': [
+    { path: '/activity-log', desc: 'Immutable audit trail of all system actions', verify: 'Verify entries load in chronological order, filtering, no edit/delete options' },
+  ],
+  'Admin': [
+    { path: '/admin', desc: 'Admin panel overview', verify: 'Verify admin-only access, overview stats display' },
+    { path: '/admin/users', desc: 'User directory management', verify: 'Verify user list, role assignment, activate/deactivate accounts' },
+    { path: '/admin/departments', desc: 'Department management', verify: 'Verify CRUD for departments, parent-child relationships' },
+    { path: '/admin/categories', desc: 'Asset category management', verify: 'Verify category tree, nesting, icon selection' },
+  ],
+};
+
+// ===================== API ENDPOINTS DATA =====================
+const apiEndpoints = [
+  // Auth
+  { method: 'POST', path: '/api/auth/register', desc: 'Register a new user account', role: 'Public' },
+  { method: 'POST', path: '/api/auth/login', desc: 'Authenticate user and return session', role: 'Public' },
+  { method: 'POST', path: '/api/auth/logout', desc: 'End user session', role: 'Authenticated' },
+  { method: 'GET',  path: '/api/auth/me', desc: 'Get current user profile', role: 'Authenticated' },
+
+  // Assets
+  { method: 'GET',  path: '/api/assets', desc: 'List all assets with pagination and filters', role: 'Authenticated' },
+  { method: 'POST', path: '/api/assets', desc: 'Create a new asset', role: 'Manager, Admin' },
+  { method: 'GET',  path: '/api/assets/:id', desc: 'Get asset details by ID', role: 'Authenticated' },
+  { method: 'PATCH', path: '/api/assets/:id', desc: 'Update asset information', role: 'Manager, Admin' },
+  { method: 'DELETE', path: '/api/assets/:id', desc: 'Soft-delete an asset', role: 'Admin' },
+  { method: 'GET',  path: '/api/assets/:id/history', desc: 'Get asset lifecycle history', role: 'Authenticated' },
+
+  // Allocations
+  { method: 'GET',  path: '/api/allocations', desc: 'List all allocations with filters', role: 'Authenticated' },
+  { method: 'POST', path: '/api/allocations', desc: 'Create new asset allocation', role: 'Manager, Admin' },
+  { method: 'GET',  path: '/api/allocations/:id', desc: 'Get allocation details', role: 'Authenticated' },
+  { method: 'PATCH', path: '/api/allocations/:id', desc: 'Update allocation (extend, modify)', role: 'Manager, Admin' },
+  { method: 'POST', path: '/api/allocations/:id/return', desc: 'Return allocated asset', role: 'Manager, Admin' },
+  { method: 'DELETE', path: '/api/allocations/:id', desc: 'Cancel allocation', role: 'Admin' },
+
+  // Bookings
+  { method: 'GET',  path: '/api/bookings', desc: 'List all bookings', role: 'Authenticated' },
+  { method: 'POST', path: '/api/bookings', desc: 'Create new resource booking', role: 'Authenticated' },
+  { method: 'GET',  path: '/api/bookings/:id', desc: 'Get booking details', role: 'Authenticated' },
+  { method: 'PATCH', path: '/api/bookings/:id', desc: 'Update booking details', role: 'Authenticated' },
+  { method: 'DELETE', path: '/api/bookings/:id', desc: 'Cancel booking', role: 'Authenticated' },
+  { method: 'GET',  path: '/api/bookings/check-overlap', desc: 'Check for booking conflicts', role: 'Authenticated' },
+
+  // Maintenance
+  { method: 'GET',  path: '/api/maintenance', desc: 'List all maintenance requests', role: 'Authenticated' },
+  { method: 'POST', path: '/api/maintenance', desc: 'Create maintenance request', role: 'Authenticated' },
+  { method: 'GET',  path: '/api/maintenance/:id', desc: 'Get maintenance request details', role: 'Authenticated' },
+  { method: 'PATCH', path: '/api/maintenance/:id', desc: 'Update maintenance request', role: 'Manager, Admin' },
+  { method: 'POST', path: '/api/maintenance/:id/assign', desc: 'Assign maintenance to technician', role: 'Manager, Admin' },
+  { method: 'POST', path: '/api/maintenance/:id/transition', desc: 'Transition maintenance state', role: 'Manager, Admin' },
+
+  // Transfers
+  { method: 'GET',  path: '/api/transfers', desc: 'List all transfer requests', role: 'Authenticated' },
+  { method: 'POST', path: '/api/transfers', desc: 'Create transfer request', role: 'Authenticated' },
+  { method: 'GET',  path: '/api/transfers/:id', desc: 'Get transfer details', role: 'Authenticated' },
+  { method: 'PATCH', path: '/api/transfers/:id/approve', desc: 'Approve transfer request', role: 'Manager, Admin' },
+  { method: 'PATCH', path: '/api/transfers/:id/reject', desc: 'Reject transfer request', role: 'Manager, Admin' },
+
+  // Audits
+  { method: 'GET',  path: '/api/audits', desc: 'List all audit cycles', role: 'Authenticated' },
+  { method: 'POST', path: '/api/audits', desc: 'Create new audit cycle', role: 'Admin' },
+  { method: 'GET',  path: '/api/audits/:id', desc: 'Get audit details with items', role: 'Authenticated' },
+  { method: 'PATCH', path: '/api/audits/:id', desc: 'Update audit cycle', role: 'Admin' },
+  { method: 'POST', path: '/api/audits/:id/items/:itemId', desc: 'Submit audit item result', role: 'Auditor' },
+  { method: 'POST', path: '/api/audits/:id/close', desc: 'Close audit cycle', role: 'Admin' },
+
+  // Dashboard
+  { method: 'GET',  path: '/api/dashboard/stats', desc: 'Get dashboard KPI statistics', role: 'Authenticated' },
+  { method: 'GET',  path: '/api/dashboard/activity', desc: 'Get recent activity feed', role: 'Authenticated' },
+
+  // Admin
+  { method: 'GET',  path: '/api/admin/users', desc: 'List all users', role: 'Admin' },
+  { method: 'PATCH', path: '/api/admin/users/:id', desc: 'Update user role or status', role: 'Admin' },
+  { method: 'DELETE', path: '/api/admin/users/:id', desc: 'Deactivate user account', role: 'Admin' },
+  { method: 'GET',  path: '/api/admin/departments', desc: 'List all departments', role: 'Authenticated' },
+  { method: 'POST', path: '/api/admin/departments', desc: 'Create department', role: 'Admin' },
+  { method: 'PATCH', path: '/api/admin/departments/:id', desc: 'Update department', role: 'Admin' },
+  { method: 'DELETE', path: '/api/admin/departments/:id', desc: 'Delete department', role: 'Admin' },
+  { method: 'GET',  path: '/api/admin/categories', desc: 'List asset categories', role: 'Authenticated' },
+  { method: 'POST', path: '/api/admin/categories', desc: 'Create asset category', role: 'Admin' },
+  { method: 'PATCH', path: '/api/admin/categories/:id', desc: 'Update category', role: 'Admin' },
+  { method: 'DELETE', path: '/api/admin/categories/:id', desc: 'Delete category', role: 'Admin' },
+
+  // Activity Log
+  { method: 'GET',  path: '/api/activity', desc: 'Get activity log entries', role: 'Authenticated' },
+];
+
+// ===================== FEATURES DATA =====================
+const features = {
+  'Auth & Onboarding': [
+    'User can register with email and password',
+    'Registration validates required fields (name, email, password)',
+    'Duplicate email registration is rejected with proper error',
+    'User can log in with registered credentials',
+    'Invalid credentials show appropriate error message',
+    'Session persists across page refreshes',
+    'Logout clears session and redirects to login',
+    'Unauthenticated users are redirected to /login',
+    'Role-based access: Admin can access /admin routes',
+    'Role-based access: Manager has appropriate permissions',
+    'Role-based access: Auditor can access assigned audits',
+    'Password is hashed (not stored in plain text)',
+  ],
+  'Dashboard': [
+    'Dashboard loads with all KPI cards populated',
+    'Total Assets count is accurate',
+    'Active Allocations count is accurate',
+    'Pending Maintenance count is accurate',
+    'Overdue Bookings indicator works',
+    'Recent Activity feed shows latest entries',
+    'Activity feed links navigate to relevant records',
+    'Dashboard is responsive on mobile viewports',
+    'Dashboard loads within acceptable time (< 2s)',
+  ],
+  'Asset Registry': [
+    'Asset list page loads with all assets',
+    'Search by asset name/serial number works',
+    'Filter by category works',
+    'Filter by status (available, allocated, maintenance) works',
+    'Filter by department works',
+    'Pagination works correctly (next/prev pages)',
+    'Create new asset — all form fields present',
+    'Create asset validates required fields',
+    'Create asset with valid data succeeds and redirects',
+    'Asset detail page loads all information tabs',
+    'Asset lifecycle history timeline displays correctly',
+    'Edit asset information saves changes',
+    'Asset status transitions are reflected immediately',
+    'Asset condition grades display correctly',
+    'Depreciation calculation displays on detail page',
+    'Asset images/photos upload and display',
+    'Delete asset requires confirmation dialog',
+    'Soft-deleted assets are hidden from default list',
+  ],
+  'Allocation Engine': [
+    'Allocations list loads with all entries',
+    'Status filters (active, returned, overdue) work',
+    'Create allocation — asset picker shows available assets only',
+    'Create allocation — date range picker functions',
+    'Conflict detection prevents double-allocation',
+    'End date must be after start date',
+    'Allocation creates audit trail entry',
+    'Return asset workflow changes status correctly',
+    'Returned asset becomes available for re-allocation',
+    'Allocation history visible on asset detail page',
+    'Allocation history visible on user profile',
+    'Overdue allocation alerts display on dashboard',
+  ],
+  'Resource Booking': [
+    'Bookings list loads with all entries',
+    'Create booking — asset picker functions',
+    'Start/end datetime picker works correctly',
+    'Overlap validation prevents conflicting bookings',
+    'Overlap check API returns accurate results',
+    'Booking purpose field accepts text input',
+    'Booking status displays correctly (pending, approved, active, completed)',
+    'Cancel booking frees the time slot',
+    'Booking list shows date/time clearly',
+    'Calendar view (if available) displays bookings visually',
+  ],
+  'Maintenance Workflow': [
+    'Maintenance list loads with all requests',
+    'Create maintenance request — all fields present',
+    'Asset picker in maintenance form works',
+    'Priority levels (low, medium, high, critical) display',
+    'Description field accepts multi-line text',
+    'Cost estimate field accepts numeric input',
+    'State machine: Open → In Progress transition works',
+    'State machine: In Progress → Resolved transition works',
+    'State machine: Resolved → Closed transition works',
+    'State machine: any state → Reopened transition works',
+    'Assign technician to maintenance request works',
+    'Assigned technician sees request in their queue',
+    'Maintenance status changes create audit trail entries',
+    'Maintenance linked to asset shows on asset history',
+  ],
+  'Transfer Pipeline': [
+    'Transfers list loads with all requests',
+    'Create transfer request — select asset and target department',
+    'Transfer request shows Pending status initially',
+    'Approve transfer updates status and asset department',
+    'Reject transfer updates status with reason',
+    'Transfer creates audit trail entry',
+    'Asset department changes are reflected immediately',
+    'Transfer history visible on asset detail page',
+    'Only authorized users can approve/reject transfers',
+  ],
+  'Audit Cycles': [
+    'Audits list loads with all cycles',
+    'Create audit cycle with name and date range',
+    'Assign auditors to audit cycle',
+    'Audit detail page loads with all checklist items',
+    'Auditor can submit item results (pass/fail/conditional)',
+    'Condition grading options display correctly',
+    'Photo upload on audit items works',
+    'Audit progress bar updates as items are completed',
+    'Close audit cycle disables further item submissions',
+    'Closed audits display final summary',
+    'Audit reports are accessible after closing',
+    'Only admin can create/close audit cycles',
+  ],
+  'Admin Panel': [
+    'Admin panel only accessible to Admin role users',
+    'Non-admin users see "Access Denied" or are redirected',
+    'User directory lists all registered users',
+    'Change user role (Admin, Manager, Auditor, Staff)',
+    'Activate/deactivate user accounts',
+    'Deactivated users cannot log in',
+    'Department list loads correctly',
+    'Create new department with name and description',
+    'Edit department information',
+    'Delete department (with confirmation)',
+    'Asset categories list loads correctly',
+    'Create category with name, icon, and parent',
+    'Edit category details',
+    'Delete category (with confirmation, checks for linked assets)',
+    'Category tree/hierarchy displays correctly',
+  ],
+  'Activity Logs': [
+    'Activity log page loads with entries',
+    'Entries display in reverse chronological order',
+    'Each entry shows: actor, action, target, timestamp',
+    'Filter by action type works',
+    'Filter by user works',
+    'Filter by date range works',
+    'Activity entries link to relevant records',
+    'Log is read-only (no edit/delete options)',
+    'Asset creation creates activity entry',
+    'Allocation create/return creates activity entry',
+    'Booking create/cancel creates activity entry',
+    'Maintenance state changes create activity entry',
+    'Transfer approve/reject creates activity entry',
+    'Audit actions create activity entries',
+  ],
+};
+
+// ===================== DATABASE TABLES =====================
+const dbTables = [
+  { name: 'users', desc: 'User accounts with roles and profiles' },
+  { name: 'departments', desc: 'Organizational departments with hierarchy' },
+  { name: 'categories', desc: 'Asset categories with nesting support' },
+  { name: 'assets', desc: 'Core asset registry with lifecycle fields' },
+  { name: 'allocations', desc: 'Asset-to-user assignment records' },
+  { name: 'bookings', desc: 'Time-based resource reservations' },
+  { name: 'maintenance_requests', desc: 'Maintenance work orders and history' },
+  { name: 'transfers', desc: 'Inter-department asset transfer requests' },
+  { name: 'audits', desc: 'Audit cycle definitions and metadata' },
+  { name: 'audit_items', desc: 'Individual audit checklist items with results' },
+  { name: 'audit_assignments', desc: 'Auditor-to-audit cycle assignments' },
+  { name: 'activity_logs', desc: 'Immutable system-wide audit trail' },
+];
+
+// ===================== RENDER FUNCTIONS =====================
+function renderRoutes() {
+  const body = document.getElementById('routesBody');
+  let html = '';
+  let idx = 0;
+  for (const [module, items] of Object.entries(routes)) {
+    html += '<div class="module-label">' + module + '</div>';
+    for (const r of items) {
+      const id = 'route_' + idx;
+      const url = BASE + r.path;
+      html += '<div class="route-row">';
+      html += '<input type="checkbox" class="route-check" data-id="' + id + '">';
+      html += '<span class="route-path">' + r.path + '</span>';
+      html += '<a href="' + url + '" target="_blank" rel="noopener" class="link-btn">Open ↗</a>';
+      html += '<span class="route-desc">' + r.desc + '</span>';
+      html += '<span class="route-verify">' + r.verify + '</span>';
+      html += '</div>';
+      idx++;
+    }
+  }
+  body.innerHTML = html;
+  body.querySelectorAll('.route-check').forEach(cb => {
+    cb.checked = !!state[cb.dataset.id];
+    cb.addEventListener('change', function() {
+      state[this.dataset.id] = this.checked;
+      saveState(state);
+      updateProgress();
+    });
+  });
+}
+
+function renderApi() {
+  const body = document.getElementById('apiBody');
+  const groups = {};
+  const domainMap = {
+    '/api/auth': 'Auth',
+    '/api/assets': 'Assets',
+    '/api/allocations': 'Allocations',
+    '/api/bookings': 'Bookings',
+    '/api/maintenance': 'Maintenance',
+    '/api/transfers': 'Transfers',
+    '/api/audits': 'Audits',
+    '/api/dashboard': 'Dashboard',
+    '/api/admin': 'Admin',
+    '/api/activity': 'Activity Log',
+  };
+
+  for (const ep of apiEndpoints) {
+    let domain = 'Other';
+    for (const [prefix, name] of Object.entries(domainMap)) {
+      if (ep.path.startsWith(prefix)) { domain = name; break; }
+    }
+    if (!groups[domain]) groups[domain] = [];
+    groups[domain].push(ep);
+  }
+
+  let html = '';
+  let idx = 0;
+  const order = ['Auth', 'Assets', 'Allocations', 'Bookings', 'Maintenance', 'Transfers', 'Audits', 'Dashboard', 'Admin', 'Activity Log'];
+  for (const domain of order) {
+    if (!groups[domain]) continue;
+    html += '<div class="module-label">' + domain + '</div>';
+    html += '<div class="api-table-scroll"><table class="api-table"><thead><tr>';
+    html += '<th style="width:40px;text-align:center;">✓</th>';
+    html += '<th style="width:80px;">Method</th>';
+    html += '<th style="width:320px;">Path</th>';
+    html += '<th>Description</th>';
+    html += '<th style="width:140px;">Role</th>';
+    html += '</tr></thead><tbody>';
+    for (const ep of groups[domain]) {
+      const id = 'api_' + idx;
+      html += '<tr>';
+      html += '<td><input type="checkbox" data-id="' + id + '"></td>';
+      html += '<td><span class="method-badge method-' + ep.method + '">' + ep.method + '</span></td>';
+      html += '<td><span class="api-path">' + ep.path + '</span></td>';
+      html += '<td style="color:var(--text-secondary);">' + ep.desc + '</td>';
+      html += '<td><span class="role-badge">' + ep.role + '</span></td>';
+      html += '</tr>';
+      idx++;
+    }
+    html += '</tbody></table></div>';
+  }
+  body.innerHTML = html;
+  body.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    cb.checked = !!state[cb.dataset.id];
+    cb.addEventListener('change', function() {
+      state[this.dataset.id] = this.checked;
+      saveState(state);
+      updateProgress();
+    });
+  });
+}
+
+function renderFeatures() {
+  const body = document.getElementById('featuresBody');
+  let html = '';
+  let idx = 0;
+  for (const [group, items] of Object.entries(features)) {
+    html += '<div class="feature-group">';
+    html += '<div class="module-label">' + group + '</div>';
+    for (const item of items) {
+      const id = 'feat_' + idx;
+      html += '<div class="feature-item">';
+      html += '<input type="checkbox" data-id="' + id + '">';
+      html += '<span>' + item + '</span>';
+      html += '</div>';
+      idx++;
+    }
+    html += '</div>';
+  }
+  body.innerHTML = html;
+  body.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    cb.checked = !!state[cb.dataset.id];
+    cb.addEventListener('change', function() {
+      state[this.dataset.id] = this.checked;
+      saveState(state);
+      updateProgress();
+      const lbl = this.nextElementSibling;
+      if (lbl) lbl.style.textDecoration = this.checked ? 'line-through' : 'none';
+    });
+  });
+}
+
+function renderDb() {
+  const body = document.getElementById('dbBody');
+  let html = '<div class="db-grid">';
+  dbTables.forEach((t, i) => {
+    const id = 'db_' + i;
+    html += '<div class="db-table-item">';
+    html += '<input type="checkbox" data-id="' + id + '">';
+    html += '<span style="font-weight:600;">' + t.name + '</span>';
+    html += '<span style="color:var(--text-muted);font-family:sans-serif;font-size:12px;margin-left:4px;">— ' + t.desc + '</span>';
+    html += '</div>';
+  });
+  html += '</div>';
+  body.innerHTML = html;
+  body.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    cb.checked = !!state[cb.dataset.id];
+    cb.addEventListener('change', function() {
+      state[this.dataset.id] = this.checked;
+      saveState(state);
+      updateProgress();
+    });
+  });
+}
+
+function renderSummary() {
+  const routeCount = Object.values(routes).flat().length;
+  const apiCount = apiEndpoints.length;
+  const featureCount = Object.values(features).flat().length;
+  const dbCount = dbTables.length;
+  const total = routeCount + apiCount + featureCount + dbCount;
+  const checked = document.querySelectorAll('input[type="checkbox"]:checked').length;
+  const pct = total ? Math.round((checked / total) * 100) : 0;
+
+  document.getElementById('summaryGrid').innerHTML =
+    '<div class="summary-card"><div class="num">' + routeCount + '</div><div class="lbl">Frontend Routes</div></div>' +
+    '<div class="summary-card"><div class="num">' + apiCount + '</div><div class="lbl">API Endpoints</div></div>' +
+    '<div class="summary-card"><div class="num">' + featureCount + '</div><div class="lbl">Feature Checks</div></div>' +
+    '<div class="summary-card"><div class="num">' + dbCount + '</div><div class="lbl">DB Tables</div></div>' +
+    '<div class="summary-card"><div class="num" id="summaryStats">' + checked + ' / ' + total + '</div><div class="lbl">Checked Items</div></div>' +
+    '<div class="summary-card"><div class="num" id="summaryPct">' + pct + '%</div><div class="lbl">Completion</div></div>';
+
+  const sp = document.getElementById('summaryProgressBar');
+  sp.style.width = pct + '%';
+  sp.textContent = pct + '%';
+}
+
+// ===================== SEARCH =====================
+document.getElementById('searchBox').addEventListener('input', function() {
+  const q = this.value.toLowerCase().trim();
+  const sections = document.querySelectorAll('.section');
+  if (!q) {
+    sections.forEach(s => s.style.display = '');
+    document.querySelectorAll('.route-row, .feature-item, tr, .db-table-item, .module-label, .api-table-scroll').forEach(el => el.style.display = '');
+    return;
+  }
+  sections.forEach(s => s.style.display = '');
+  document.querySelectorAll('.route-row').forEach(el => {
+    el.style.display = el.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+  document.querySelectorAll('.feature-item').forEach(el => {
+    el.style.display = el.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+  document.querySelectorAll('.api-table-scroll table tbody tr').forEach(el => {
+    el.style.display = el.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+  document.querySelectorAll('.db-table-item').forEach(el => {
+    el.style.display = el.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+});
+
+// ===================== INIT =====================
+function init() {
+  const savedTheme = localStorage.getItem('assetflow_theme');
+  if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+  renderRoutes();
+  renderApi();
+  renderFeatures();
+  renderDb();
+
+  setTimeout(() => {
+    renderSummary();
+    updateProgress();
+  }, 100);
+}
+
+init();
+</script>
+</body>
+</html>
