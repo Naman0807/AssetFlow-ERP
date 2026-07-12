@@ -1,6 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Asset Pivot View -->
+    <!-- Dashboard Form View (KPI Cards) -->
+    <record id="view_assetflow_dashboard_form" model="ir.ui.view">
+        <field name="name">assetflow.dashboard.form</field>
+        <field name="model">assetflow.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="AssetFlow Dashboard" create="false" edit="false">
+                <sheet>
+                    <div class="o_kanban_breadcrumb_with_level_down oe_kanban_breadcrumb_with_level_down">
+                    </div>
+                    <div class="container-fluid">
+                        <h2 class="text-center mb-4">AssetFlow Dashboard</h2>
+
+                        <!-- Row 1: Asset Status -->
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="card text-white bg-primary mb-3">
+                                    <div class="card-body text-center">
+                                        <h1 class="card-title"><field name="total_assets"/></h1>
+                                        <p class="card-text">Total Assets</p>
+                                    </div>
+                                    <div class="card-footer text-center">
+                                        <a class="text-white" style="cursor:pointer;" name="action_view_assets" type="object">View All</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-white bg-success mb-3">
+                                    <div class="card-body text-center">
+                                        <h1 class="card-title"><field name="available_assets"/></h1>
+                                        <p class="card-text">Available</p>
+                                    </div>
+                                    <div class="card-footer text-center">
+                                        <a class="text-white" style="cursor:pointer;" name="action_view_assets" type="object">View All</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-white bg-info mb-3">
+                                    <div class="card-body text-center">
+                                        <h1 class="card-title"><field name="allocated_assets"/></h1>
+                                        <p class="card-text">Allocated</p>
+                                    </div>
+                                    <div class="card-footer text-center">
+                                        <a class="text-white" style="cursor:pointer;" name="action_view_assets" type="object">View All</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-white bg-warning mb-3">
+                                    <div class="card-body text-center">
+                                        <h1 class="card-title"><field name="maintenance_assets"/></h1>
+                                        <p class="card-text">Under Maintenance</p>
+                                    </div>
+                                    <div class="card-footer text-center">
+                                        <a class="text-white" style="cursor:pointer;" name="action_view_assets" type="object">View All</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 2: Alerts -->
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="card border-danger mb-3">
+                                    <div class="card-body text-center text-danger">
+                                        <h1 class="card-title"><field name="overdue_allocations"/></h1>
+                                        <p class="card-text">Overdue Allocations</p>
+                                    </div>
+                                    <div class="card-footer text-center">
+                                        <a class="text-danger" style="cursor:pointer;" name="action_view_overdue" type="object">View Overdue</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card border-danger mb-3">
+                                    <div class="card-body text-center text-danger">
+                                        <h1 class="card-title"><field name="lost_assets"/></h1>
+                                        <p class="card-text">Lost Assets</p>
+                                    </div>
+                                    <div class="card-footer text-center">
+                                        <a class="text-danger" style="cursor:pointer;" name="action_view_assets" type="object">View All</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card border-warning mb-3">
+                                    <div class="card-body text-center text-warning">
+                                        <h1 class="card-title"><field name="pending_maintenance"/></h1>
+                                        <p class="card-text">Pending Maintenance</p>
+                                    </div>
+                                    <div class="card-footer text-center">
+                                        <a class="text-warning" style="cursor:pointer;" name="action_view_pending_maintenance" type="object">View Pending</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card border-info mb-3">
+                                    <div class="card-body text-center text-info">
+                                        <h1 class="card-title"><field name="active_bookings"/></h1>
+                                        <p class="card-text">Active Bookings</p>
+                                    </div>
+                                    <div class="card-footer text-center">
+                                        <a class="text-info" style="cursor:pointer;" name="action_view_active_bookings" type="object">View Bookings</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 3: Quick Links -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="card mb-3">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">Open Audit Cycles</h5>
+                                        <h2><field name="open_audit_cycles"/></h2>
+                                        <a style="cursor:pointer;" name="action_view_open_audits" type="object" class="btn btn-outline-primary btn-sm">View Audits</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card mb-3">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">Maintenance Analytics</h5>
+                                        <i class="fa fa-bar-chart fa-2x mb-2 text-muted"></i>
+                                        <br/>
+                                        <a style="cursor:pointer;" name="action_view_maintenance_analytics" type="object" class="btn btn-outline-primary btn-sm">View Analytics</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card mb-3">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">Allocation Analytics</h5>
+                                        <i class="fa fa-pie-chart fa-2x mb-2 text-muted"></i>
+                                        <br/>
+                                        <a style="cursor:pointer;" name="action_view_allocation_analytics" type="object" class="btn btn-outline-primary btn-sm">View Analytics</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Dashboard Action -->
+    <record id="action_assetflow_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">assetflow.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'default_id': 1}</field>
+    </record>
+
+    <!-- Asset Pivot View (kept in analytics submenu) -->
     <record id="view_assetflow_asset_pivot" model="ir.ui.view">
         <field name="name">assetflow.asset.pivot</field>
         <field name="model">assetflow.asset</field>
@@ -21,26 +176,6 @@
                 <field name="category_id"/>
                 <field name="state" type="col"/>
             </graph>
-        </field>
-    </record>
-
-    <!-- Asset Dashboard Action -->
-    <record id="action_assetflow_dashboard" model="ir.actions.act_window">
-        <field name="name">Dashboard</field>
-        <field name="res_model">assetflow.asset</field>
-        <field name="view_mode">pivot,graph,tree</field>
-        <field name="context">{
-            'group_by': 'state',
-            'search_default_group_by_category': 1,
-        }</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                AssetFlow Dashboard
-            </p>
-            <p>
-                Use the pivot and graph views to analyze your asset portfolio.
-                Switch between pivot table and chart views using the buttons above.
-            </p>
         </field>
     </record>
 
@@ -67,14 +202,11 @@
         </field>
     </record>
 
-    <!-- Allocation Analytics Action -->
     <record id="action_assetflow_allocation_analytics" model="ir.actions.act_window">
         <field name="name">Allocation Analytics</field>
         <field name="res_model">assetflow.allocation</field>
         <field name="view_mode">pivot,graph,tree</field>
-        <field name="context">{
-            'group_by': 'status',
-        }</field>
+        <field name="context">{'group_by': 'status'}</field>
     </record>
 
     <!-- Maintenance Analysis -->
@@ -100,13 +232,10 @@
         </field>
     </record>
 
-    <!-- Maintenance Analytics Action -->
     <record id="action_assetflow_maintenance_analytics" model="ir.actions.act_window">
         <field name="name">Maintenance Analytics</field>
         <field name="res_model">assetflow.maintenance.request</field>
         <field name="view_mode">pivot,graph,tree</field>
-        <field name="context">{
-            'group_by': 'status',
-        }</field>
+        <field name="context">{'group_by': 'status'}</field>
     </record>
 </odoo>
