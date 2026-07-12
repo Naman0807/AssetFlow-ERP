@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_asset_register" model="ir.actions.report">
+        <field name="name">Asset Register</field>
+        <field name="model">assetflow.asset</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">asset_flow.report_asset_register</field>
+        <field name="report_file">asset_flow.report_asset_register</field>
+        <field name="binding_model_id" ref="model_assetflow_asset"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_asset_register">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="asset">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center mb-4">Asset Register</h2>
+                        <table class="table table-sm table-bordered mb-4">
+                            <tr>
+                                <th style="width:30%">Asset Tag</th>
+                                <td><span t-field="asset.asset_tag"/></td>
+                            </tr>
+                            <tr>
+                                <th>Name</th>
+                                <td><span t-field="asset.name"/></td>
+                            </tr>
+                            <tr>
+                                <th>Category</th>
+                                <td><span t-field="asset.category_id"/></td>
+                            </tr>
+                            <tr>
+                                <th>Serial Number</th>
+                                <td><span t-field="asset.serial_number"/></td>
+                            </tr>
+                            <tr>
+                                <th>Acquisition Date</th>
+                                <td><span t-field="asset.acquisition_date"/></td>
+                            </tr>
+                            <tr>
+                                <th>Acquisition Cost</th>
+                                <td><span t-field="asset.acquisition_cost"/></td>
+                            </tr>
+                            <tr>
+                                <th>Condition</th>
+                                <td><span t-field="asset.condition"/></td>
+                            </tr>
+                            <tr>
+                                <th>Location</th>
+                                <td><span t-field="asset.location"/></td>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <td><span t-field="asset.state"/></td>
+                            </tr>
+                            <tr>
+                                <th>Bookable</th>
+                                <td><span t-field="asset.is_bookable"/></td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

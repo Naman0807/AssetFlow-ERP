@@ -164,6 +164,17 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_verify" string="Verify" 
+                                type="object" class="oe_highlight"
+                                invisible="verification_status == 'verified'"/>
+                        <button name="action_flag_missing" string="Flag Missing" 
+                                type="object" class="btn-danger"
+                                invisible="verification_status == 'missing'"/>
+                        <button name="action_flag_damaged" string="Flag Damaged" 
+                                type="object" class="btn-warning"
+                                invisible="verification_status == 'damaged'"/>
+                    </div>
                     <group>
                         <group>
                             <field name="cycle_id"/>
