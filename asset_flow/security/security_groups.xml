@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_assetflow" model="ir.module.category">
+        <field name="name">AssetFlow</field>
+        <field name="sequence">100</field>
+    </record>
+
+    <!-- Employee Group - Basic Access (defined first) -->
+    <record id="group_assetflow_employee" model="res.groups">
+        <field name="name">Employee</field>
+        <field name="category_id" ref="module_category_assetflow"/>
+    </record>
+
+    <!-- Department Head Group -->
+    <record id="group_assetflow_dept_head" model="res.groups">
+        <field name="name">Department Head</field>
+        <field name="category_id" ref="module_category_assetflow"/>
+        <field name="implied_ids" eval="[(4, ref('group_assetflow_employee'))]"/>
+    </record>
+
+    <!-- Asset Manager Group -->
+    <record id="group_assetflow_manager" model="res.groups">
+        <field name="name">Asset Manager</field>
+        <field name="category_id" ref="module_category_assetflow"/>
+        <field name="implied_ids" eval="[(4, ref('group_assetflow_dept_head'))]"/>
+    </record>
+
+    <!-- Admin Group - Full Access -->
+    <record id="group_assetflow_admin" model="res.groups">
+        <field name="name">AssetFlow Admin</field>
+        <field name="category_id" ref="module_category_assetflow"/>
+        <field name="implied_ids" eval="[(4, ref('group_assetflow_manager'))]"/>
+    </record>
+</odoo>

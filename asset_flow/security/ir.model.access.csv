@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_assetflow_admin_department,assetflow.admin.department,model_assetflow_department,base.group_user,1,1,1,1
+access_assetflow_admin_category,assetflow.admin.category,model_assetflow_asset_category,base.group_user,1,1,1,1
+access_assetflow_admin_employee,assetflow.admin.employee,model_hr_employee,base.group_user,1,1,1,1
+access_assetflow_admin_asset,assetflow.admin.asset,model_assetflow_asset,base.group_user,1,1,1,1
+access_assetflow_admin_allocation,assetflow.admin.allocation,model_assetflow_allocation,base.group_user,1,1,1,1
+access_assetflow_admin_booking,assetflow.admin.booking,model_assetflow_booking,base.group_user,1,1,1,1
+access_assetflow_admin_maintenance,assetflow.admin.maintenance,model_assetflow_maintenance_request,base.group_user,1,1,1,1
+access_assetflow_admin_audit_cycle,assetflow.admin.audit.cycle,model_assetflow_audit_cycle,base.group_user,1,1,1,1
+access_assetflow_admin_audit_item,assetflow.admin.audit.item,model_assetflow_audit_item,base.group_user,1,1,1,1
