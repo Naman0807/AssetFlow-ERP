@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class HrEmployee(models.Model):
@@ -29,3 +29,14 @@ class HrEmployee(models.Model):
 
     def action_promote_to_admin(self):
         self.write({'assetflow_role': 'admin'})
+
+    @api.constrains('assetflow_role')
+    def _check_role_self_elevation(self):
+        for record in self:
+            if record.assetflow_role != 'employee':
+                if self.env.user.employee_id and self.env.user.employee_id.id == record.id:
+                    from odoo.exceptions import ValidationError
+                    raise ValidationError(
+                        'You cannot elevate your own role. '
+                        'Only an Admin can promote employees.'
+                    )
