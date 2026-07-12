@@ -7,3 +7,4 @@ from . import resource_booking
 from . import maintenance_request
 from . import audit_cycle
 from . import audit_item
+from . import dashboard
