@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Maintenance Tree View -->
+    <record id="view_assetflow_maintenance_tree" model="ir.ui.view">
+        <field name="name">assetflow.maintenance.request.tree</field>
+        <field name="model">assetflow.maintenance.request</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="priority == 'high'"
+                  decoration-warning="priority == 'medium'"
+                  decoration-muted="status == 'resolved'">
+                <field name="name"/>
+                <field name="asset_id"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="priority" widget="priority"/>
+                <field name="request_date"/>
+                <field name="technician_id"/>
+                <field name="status" widget="badge"
+                       decoration-warning="status == 'pending'"
+                       decoration-success="status == 'resolved'"
+                       decoration-info="status in ['approved', 'in_progress']"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Maintenance Form View -->
+    <record id="view_assetflow_maintenance_form" model="ir.ui.view">
+        <field name="name">assetflow.maintenance.request.form</field>
+        <field name="model">assetflow.maintenance.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_approve" string="Approve" 
+                            type="object" class="oe_highlight"
+                            invisible="status != 'pending'"
+                            groups="asset_flow.group_assetflow_manager"/>
+                    <button name="action_reject" string="Reject" 
+                            type="object"
+                            invisible="status != 'pending'"
+                            groups="asset_flow.group_assetflow_manager"/>
+                    <button name="action_assign_technician" string="Assign Technician" 
+                            type="object" class="oe_highlight"
+                            invisible="status != 'approved'"
+                            groups="asset_flow.group_assetflow_manager"/>
+                    <button name="action_start_work" string="Start Work" 
+                            type="object" class="oe_highlight"
+                            invisible="status != 'technician_assigned'"/>
+                    <button name="action_resolve" string="Resolve" 
+                            type="object" class="oe_highlight"
+                            invisible="status != 'in_progress'"/>
+                    <field name="status" widget="statusbar" 
+                           statusbar_visible="pending,approved,in_progress,resolved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Request Details">
+                            <field name="asset_id"/>
+                            <field name="employee_id"/>
+                            <field name="department_id"/>
+                            <field name="priority" widget="priority"/>
+                            <field name="request_date"/>
+                        </group>
+                        <group string="Resolution">
+                            <field name="technician_id"/>
+                            <field name="approved_by"/>
+                            <field name="resolution_date"/>
+                        </group>
+                    </group>
+                    <group string="Issue Description">
+                        <field name="issue_description" nolabel="1" 
+                               placeholder="Describe the issue in detail..."/>
+                    </group>
+                    <group string="Photo Evidence">
+                        <field name="photo" widget="image" 
+                               options='{"preview_image": "image_128"}'/>
+                    </group>
+                    <group string="Resolution Notes" 
+                           invisible="status != 'resolved'">
+                        <field name="resolution_notes" nolabel="1"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Maintenance Search View -->
+    <record id="view_assetflow_maintenance_search" model="ir.ui.view">
+        <field name="name">assetflow.maintenance.request.search</field>
+        <field name="model">assetflow.maintenance.request</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="asset_id"/>
+                <field name="employee_id"/>
+                <separator/>
+                <filter name="filter_pending" string="Pending" 
+                        domain="[('status', '=', 'pending')]"/>
+                <filter name="filter_approved" string="Approved" 
+                        domain="[('status', '=', 'approved')]"/>
+                <filter name="filter_in_progress" string="In Progress" 
+                        domain="[('status', '=', 'in_progress')]"/>
+                <filter name="filter_resolved" string="Resolved" 
+                        domain="[('status', '=', 'resolved')]"/>
+                <filter name="filter_high_priority" string="High Priority" 
+                        domain="[('priority', '=', 'high')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_status" string="Status" 
+                            context="{'group_by': 'status'}"/>
+                    <filter name="group_by_priority" string="Priority" 
+                            context="{'group_by': 'priority'}"/>
+                    <filter name="group_by_asset" string="Asset" 
+                            context="{'group_by': 'asset_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Maintenance Action -->
+    <record id="action_assetflow_maintenance" model="ir.actions.act_window">
+        <field name="name">Maintenance Requests</field>
+        <field name="res_model">assetflow.maintenance.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_assetflow_maintenance_search"/>
+        <field name="context">{'search_default_filter_pending': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No maintenance requests
+            </p>
+            <p>
+                Submit maintenance requests for assets that need repair.
+                Requests go through an approval workflow before work begins.
+            </p>
+        </field>
+    </record>
+</odoo>

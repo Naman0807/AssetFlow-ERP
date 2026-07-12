@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extend Employee Form with AssetFlow fields -->
+    <record id="view_assetflow_employee_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.form.assetflow</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='hr_settings']" position="after">
+                <page string="AssetFlow" name="assetflow">
+                    <group>
+                        <group>
+                            <field name="assetflow_role"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Employee Tree View (AssetFlow context) -->
+    <record id="view_assetflow_employee_tree" model="ir.ui.view">
+        <field name="name">hr.employee.tree.assetflow</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='job_id']" position="after">
+                <field name="assetflow_role"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Employee Action for AssetFlow -->
+    <record id="action_assetflow_employee" model="ir.actions.act_window">
+        <field name="name">Employee Directory</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="hr.view_employee_filter"/>
+        <field name="context">{'search_default_filter_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No employees found
+            </p>
+        </field>
+    </record>
+
+    <!-- Action to Promote Employee -->
+    <record id="action_assetflow_promote_manager" model="ir.actions.server">
+        <field name="name">Promote to Asset Manager</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            for record in records:
+                record.sudo().write({'assetflow_role': 'asset_manager'})
+        </field>
+    </record>
+</odoo>

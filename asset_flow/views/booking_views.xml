@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Booking Tree View -->
+    <record id="view_assetflow_booking_tree" model="ir.ui.view">
+        <field name="name">assetflow.booking.tree</field>
+        <field name="model">assetflow.booking</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="resource_id"/>
+                <field name="employee_id"/>
+                <field name="start_datetime"/>
+                <field name="end_datetime"/>
+                <field name="department_id"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'upcoming'"
+                       decoration-info="status == 'ongoing'"
+                       decoration-muted="status in ['completed', 'cancelled']"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Booking Form View -->
+    <record id="view_assetflow_booking_form" model="ir.ui.view">
+        <field name="name">assetflow.booking.form</field>
+        <field name="model">assetflow.booking</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm_booking" string="Start Booking" 
+                            type="object" class="oe_highlight"
+                            invisible="status != 'upcoming'"/>
+                    <button name="action_complete_booking" string="Complete" 
+                            type="object" class="oe_highlight"
+                            invisible="status != 'ongoing'"/>
+                    <button name="action_cancel_booking" string="Cancel Booking" 
+                            type="object" invisible="status in ['completed', 'cancelled']"
+                            confirm="Cancel this booking?"/>
+                    <field name="status" widget="statusbar" 
+                           statusbar_visible="upcoming,ongoing,completed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="resource_id"/>
+                            <field name="employee_id"/>
+                            <field name="department_id"/>
+                        </group>
+                        <group>
+                            <field name="start_datetime"/>
+                            <field name="end_datetime"/>
+                        </group>
+                    </group>
+                    <group string="Purpose">
+                        <field name="purpose" nolabel="1" 
+                               placeholder="Describe the purpose of this booking..."/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Booking Calendar View -->
+    <record id="view_assetflow_booking_calendar" model="ir.ui.view">
+        <field name="name">assetflow.booking.calendar</field>
+        <field name="model">assetflow.booking</field>
+        <field name="arch" type="xml">
+            <calendar string="Resource Bookings"
+                      date_start="start_datetime"
+                      date_stop="end_datetime"
+                      quick_create="0"
+                      event_open_popup="true">
+                <field name="resource_id"/>
+                <field name="employee_id"/>
+                <field name="status"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Booking Search View -->
+    <record id="view_assetflow_booking_search" model="ir.ui.view">
+        <field name="name">assetflow.booking.search</field>
+        <field name="model">assetflow.booking</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="resource_id"/>
+                <field name="employee_id"/>
+                <separator/>
+                <filter name="filter_upcoming" string="Upcoming" 
+                        domain="[('status', '=', 'upcoming')]"/>
+                <filter name="filter_ongoing" string="Ongoing" 
+                        domain="[('status', '=', 'ongoing')]"/>
+                <filter name="filter_completed" string="Completed" 
+                        domain="[('status', '=', 'completed')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_resource" string="Resource" 
+                            context="{'group_by': 'resource_id'}"/>
+                    <filter name="group_by_employee" string="Employee" 
+                            context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_by_status" string="Status" 
+                            context="{'group_by': 'status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Booking Action -->
+    <record id="action_assetflow_booking" model="ir.actions.act_window">
+        <field name="name">Resource Bookings</field>
+        <field name="res_model">assetflow.booking</field>
+        <field name="view_mode">calendar,tree,form</field>
+        <field name="search_view_id" ref="view_assetflow_booking_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No bookings yet
+            </p>
+            <p>
+                Book bookable resources for specific time slots.
+                Overlapping bookings are automatically prevented.
+            </p>
+        </field>
+    </record>
+</odoo>

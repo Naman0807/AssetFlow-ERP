@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Asset Tree View -->
+    <record id="view_assetflow_asset_tree" model="ir.ui.view">
+        <field name="name">assetflow.asset.tree</field>
+        <field name="model">assetflow.asset</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state == 'available'" 
+                  decoration-warning="state == 'maintenance'"
+                  decoration-danger="state == 'lost'"
+                  decoration-muted="state in ['retired', 'disposed']">
+                <field name="asset_tag"/>
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="serial_number"/>
+                <field name="condition"/>
+                <field name="location"/>
+                <field name="is_bookable"/>
+                <field name="state" widget="badge" 
+                       decoration-success="state == 'available'"
+                       decoration-info="state == 'allocated'"
+                       decoration-warning="state in ['reserved', 'maintenance']"
+                       decoration-danger="state == 'lost'"
+                       decoration-muted="state in ['retired', 'disposed']"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Asset Form View -->
+    <record id="view_assetflow_asset_form" model="ir.ui.view">
+        <field name="name">assetflow.asset.form</field>
+        <field name="model">assetflow.asset</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_allocate" string="Allocate" 
+                            type="object" class="oe_highlight"
+                            invisible="state != 'available'"/>
+                    <button name="action_set_lost" string="Mark Lost" 
+                            type="object" class="oe_highlight"
+                            invisible="state in ['lost', 'retired', 'disposed']"/>
+                    <button name="action_set_retired" string="Retire" 
+                            type="object"
+                            invisible="state in ['lost', 'retired', 'disposed']"/>
+                    <button name="action_set_disposed" string="Dispose" 
+                            type="object" class="oe_highlight"
+                            invisible="state != 'retired'"/>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="available,allocated,maintenance"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_assetflow_allocation)d" 
+                                type="action" class="oe_stat_button" 
+                                icon="fa-link">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Allocations</span>
+                            </div>
+                        </button>
+                        <button name="%(action_assetflow_booking)d" 
+                                type="action" class="oe_stat_button" 
+                                icon="fa-calendar">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Bookings</span>
+                            </div>
+                        </button>
+                    </div>
+                    <field name="photo" widget="image" 
+                           class="oe_avatar" options='{"preview_image": "image_128"}'/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Asset Name"/>
+                        </h1>
+                        <h3>
+                            <field name="asset_tag" readonly="1"/>
+                        </h3>
+                    </div>
+                    <group>
+                        <group string="Asset Details">
+                            <field name="category_id"/>
+                            <field name="serial_number"/>
+                            <field name="acquisition_date"/>
+                            <field name="acquisition_cost"/>
+                        </group>
+                        <group string="Status">
+                            <field name="condition"/>
+                            <field name="location"/>
+                            <field name="is_bookable"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Allocations" name="allocations">
+                            <field name="allocation_ids" 
+                                   context="{'default_asset_id': id}"/>
+                        </page>
+                        <page string="Bookings" name="bookings">
+                            <field name="booking_ids" 
+                                   context="{'default_resource_id': id}"
+                                   invisible="is_bookable == False"/>
+                            <div invisible="is_bookable == True" 
+                                 class="o_form_label">
+                                This asset is not bookable.
+                            </div>
+                        </page>
+                        <page string="Maintenance" name="maintenance">
+                            <field name="maintenance_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Asset Search View -->
+    <record id="view_assetflow_asset_search" model="ir.ui.view">
+        <field name="name">assetflow.asset.search</field>
+        <field name="model">assetflow.asset</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="asset_tag"/>
+                <field name="serial_number"/>
+                <field name="category_id"/>
+                <field name="location"/>
+                <separator/>
+                <filter name="filter_available" string="Available" 
+                        domain="[('state', '=', 'available')]"/>
+                <filter name="filter_allocated" string="Allocated" 
+                        domain="[('state', '=', 'allocated')]"/>
+                <filter name="filter_maintenance" string="Under Maintenance" 
+                        domain="[('state', '=', 'maintenance')]"/>
+                <filter name="filter_lost" string="Lost" 
+                        domain="[('state', '=', 'lost')]"/>
+                <filter name="filter_bookable" string="Bookable" 
+                        domain="[('is_bookable', '=', True)]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_category" string="Category" 
+                            context="{'group_by': 'category_id'}"/>
+                    <filter name="group_by_state" string="Status" 
+                            context="{'group_by': 'state'}"/>
+                    <filter name="group_by_location" string="Location" 
+                            context="{'group_by': 'location'}"/>
+                    <filter name="group_by_condition" string="Condition" 
+                            context="{'group_by': 'condition'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Asset Kanban View -->
+    <record id="view_assetflow_asset_kanban" model="ir.ui.view">
+        <field name="name">assetflow.asset.kanban</field>
+        <field name="model">assetflow.asset</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="asset_tag"/>
+                <field name="state"/>
+                <field name="category_id"/>
+                <field name="photo"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                            <div class="o_kanban_image_fill_left">
+                                <img t-att-src="kanban_image('assetflow.asset', 'photo', record.id.raw_value)" 
+                                     alt="Photo" class="o_kanban_image_fill_left"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_name">
+                                    <field name="name"/>
+                                </strong>
+                                <div>
+                                    <field name="asset_tag"/>
+                                </div>
+                                <div>
+                                    <field name="category_id"/>
+                                </div>
+                                <div>
+                                    <span class="badge rounded-pill text-bg-info" 
+                                          t-attf-class="badge rounded-pill 
+                                          {{record.state.raw_value == 'available' ? 'text-bg-success' : 
+                                            record.state.raw_value == 'maintenance' ? 'text-bg-warning' : 'text-bg-secondary'}}">
+                                        <field name="state"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Asset Action -->
+    <record id="action_assetflow_asset" model="ir.actions.act_window">
+        <field name="name">Assets</field>
+        <field name="res_model">assetflow.asset</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_assetflow_asset_search"/>
+        <field name="context">{'search_default_filter_available': 0}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register your first asset
+            </p>
+            <p>
+                Assets are tracked from acquisition to disposal. 
+                Register them here to manage allocation, booking, and maintenance.
+            </p>
+        </field>
+    </record>
+</odoo>

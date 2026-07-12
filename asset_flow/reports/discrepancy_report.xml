@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- QWeb Report Action -->
+    <record id="action_report_audit_discrepancy" model="ir.actions.report">
+        <field name="name">Audit Discrepancy Report</field>
+        <field name="model">assetflow.audit.cycle</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">asset_flow.report_audit_discrepancy</field>
+        <field name="report_file">asset_flow.report_audit_discrepancy</field>
+        <field name="binding_model_id" ref="model_assetflow_audit_cycle"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_us"/>
+    </record>
+
+    <!-- QWeb Report Template -->
+    <template id="report_audit_discrepancy">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="cycle">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- Header -->
+                        <h2>Audit Discrepancy Report</h2>
+                        <h3>
+                            <span t-field="cycle.name"/>
+                        </h3>
+
+                        <!-- Cycle Info -->
+                        <div class="row mb32">
+                            <div class="col-6">
+                                <strong>Scope Department:</strong>
+                                <span t-if="cycle.scope_department_id" t-field="cycle.scope_department_id"/>
+                                <span t-else="">All Departments</span>
+                                <br/>
+                                <strong>Location:</strong>
+                                <span t-if="cycle.location" t-field="cycle.location"/>
+                                <span t-else="">N/A</span>
+                            </div>
+                            <div class="col-6">
+                                <strong>Audit Period:</strong>
+                                <span t-field="cycle.date_from"/> to <span t-field="cycle.date_to"/>
+                                <br/>
+                                <strong>Status:</strong>
+                                <span t-field="cycle.status"/>
+                            </div>
+                        </div>
+
+                        <!-- Summary Stats -->
+                        <div class="row mb32">
+                            <div class="col-3 text-center">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 t-field="cycle.item_count"/>
+                                        <p>Total Items</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3 text-center">
+                                <div class="card border-success">
+                                    <div class="card-body text-success">
+                                        <h4 t-field="cycle.verified_count"/>
+                                        <p>Verified</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3 text-center">
+                                <div class="card border-danger">
+                                    <div class="card-body text-danger">
+                                        <h4 t-field="cycle.missing_count"/>
+                                        <p>Missing</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3 text-center">
+                                <div class="card border-warning">
+                                    <div class="card-body text-warning">
+                                        <h4 t-field="cycle.damaged_count"/>
+                                        <p>Damaged</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Discrepancy Table -->
+                        <h4>Discrepancy Details</h4>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Asset Tag</th>
+                                    <th>Asset Name</th>
+                                    <th>Category</th>
+                                    <th>Location</th>
+                                    <th>Status</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="cycle.audit_item_ids" t-as="item">
+                                    <tr t-if="item.verification_status in ('missing', 'damaged')"
+                                        t-att-class="'table-danger' if item.verification_status == 'missing' else 'table-warning'">
+                                        <td>
+                                            <span t-field="item.asset_id.asset_tag"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="item.asset_id.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="item.asset_id.category_id"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="item.asset_id.location"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="item.verification_status"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="item.notes"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- If no discrepancies -->
+                        <div t-if="not any(i.verification_status in ('missing', 'damaged') for i in cycle.audit_item_ids)"
+                             class="text-center mt32">
+                            <h4 class="text-success">
+                                <i class="fa fa-check-circle"/> No Discrepancies Found
+                            </h4>
+                            <p>All assets in this audit cycle have been verified successfully.</p>
+                        </div>
+
+                        <!-- Auditor Info -->
+                        <div t-if="cycle.auditor_ids" class="mt32">
+                            <strong>Auditors:</strong>
+                            <t t-foreach="cycle.auditor_ids" t-as="auditor">
+                                <span t-field="auditor.name"/>
+                                <span t-if="not auditor_last">, </span>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

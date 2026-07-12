@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top-level Menu -->
+    <menuitem id="menu_assetflow_root"
+              name="AssetFlow"
+              sequence="50"
+              web_icon="base,static/src/img/icons/dashboard.png"/>
+
+    <!-- =============================== -->
+    <!-- Organization Setup               -->
+    <!-- =============================== -->
+    <menuitem id="menu_assetflow_org"
+              name="Organization Setup"
+              parent="menu_assetflow_root"
+              sequence="10"/>
+
+    <menuitem id="menu_assetflow_department"
+              name="Departments"
+              parent="menu_assetflow_org"
+              action="action_assetflow_department"
+              sequence="10"/>
+
+    <menuitem id="menu_assetflow_category"
+              name="Asset Categories"
+              parent="menu_assetflow_org"
+              action="action_assetflow_category"
+              sequence="20"/>
+
+    <menuitem id="menu_assetflow_employee"
+              name="Employee Directory"
+              parent="menu_assetflow_org"
+              action="action_assetflow_employee"
+              sequence="30"/>
+
+    <!-- =============================== -->
+    <!-- Assets                          -->
+    <!-- =============================== -->
+    <menuitem id="menu_assetflow_assets"
+              name="Assets"
+              parent="menu_assetflow_root"
+              sequence="20"/>
+
+    <menuitem id="menu_assetflow_asset_directory"
+              name="Asset Directory"
+              parent="menu_assetflow_assets"
+              action="action_assetflow_asset"
+              sequence="10"/>
+
+    <menuitem id="menu_assetflow_allocation_menu"
+              name="Allocations"
+              parent="menu_assetflow_assets"
+              action="action_assetflow_allocation"
+              sequence="20"/>
+
+    <!-- =============================== -->
+    <!-- Bookings                        -->
+    <!-- =============================== -->
+    <menuitem id="menu_assetflow_bookings"
+              name="Resource Bookings"
+              parent="menu_assetflow_root"
+              sequence="30"/>
+
+    <menuitem id="menu_assetflow_booking_menu"
+              name="Bookings"
+              parent="menu_assetflow_bookings"
+              action="action_assetflow_booking"
+              sequence="10"/>
+
+    <!-- =============================== -->
+    <!-- Maintenance                     -->
+    <!-- =============================== -->
+    <menuitem id="menu_assetflow_maintenance"
+              name="Maintenance"
+              parent="menu_assetflow_root"
+              sequence="40"/>
+
+    <menuitem id="menu_assetflow_maintenance_menu"
+              name="Maintenance Requests"
+              parent="menu_assetflow_maintenance"
+              action="action_assetflow_maintenance"
+              sequence="10"/>
+
+    <!-- =============================== -->
+    <!-- Audits                          -->
+    <!-- =============================== -->
+    <menuitem id="menu_assetflow_audits"
+              name="Audits"
+              parent="menu_assetflow_root"
+              sequence="50"/>
+
+    <menuitem id="menu_assetflow_audit_cycle_menu"
+              name="Audit Cycles"
+              parent="menu_assetflow_audits"
+              action="action_assetflow_audit_cycle"
+              sequence="10"/>
+
+    <menuitem id="menu_assetflow_audit_item_menu"
+              name="Audit Items"
+              parent="menu_assetflow_audits"
+              action="action_assetflow_audit_item"
+              sequence="20"/>
+
+    <!-- =============================== -->
+    <!-- Reports &amp; Analytics              -->
+    <!-- =============================== -->
+    <menuitem id="menu_assetflow_reports"
+              name="Reports &amp; Analytics"
+              parent="menu_assetflow_root"
+              sequence="60"/>
+
+    <menuitem id="menu_assetflow_dashboard"
+              name="Dashboard"
+              parent="menu_assetflow_reports"
+              action="action_assetflow_dashboard"
+              sequence="10"/>
+
+    <menuitem id="menu_assetflow_allocation_analytics"
+              name="Allocation Analytics"
+              parent="menu_assetflow_reports"
+              action="action_assetflow_allocation_analytics"
+              sequence="20"/>
+
+    <menuitem id="menu_assetflow_maintenance_analytics"
+              name="Maintenance Analytics"
+              parent="menu_assetflow_reports"
+              action="action_assetflow_maintenance_analytics"
+              sequence="30"/>
+</odoo>

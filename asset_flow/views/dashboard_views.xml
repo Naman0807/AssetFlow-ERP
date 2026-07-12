@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Asset Pivot View -->
+    <record id="view_assetflow_asset_pivot" model="ir.ui.view">
+        <field name="name">assetflow.asset.pivot</field>
+        <field name="model">assetflow.asset</field>
+        <field name="arch" type="xml">
+            <pivot string="Asset Analysis">
+                <field name="category_id" type="row"/>
+                <field name="state" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Asset Graph View -->
+    <record id="view_assetflow_asset_graph" model="ir.ui.view">
+        <field name="name">assetflow.asset.graph</field>
+        <field name="model">assetflow.asset</field>
+        <field name="arch" type="xml">
+            <graph string="Asset Distribution" type="bar">
+                <field name="category_id"/>
+                <field name="state" type="col"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Asset Dashboard Action -->
+    <record id="action_assetflow_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">assetflow.asset</field>
+        <field name="view_mode">pivot,graph,tree</field>
+        <field name="context">{
+            'group_by': 'state',
+            'search_default_group_by_category': 1,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                AssetFlow Dashboard
+            </p>
+            <p>
+                Use the pivot and graph views to analyze your asset portfolio.
+                Switch between pivot table and chart views using the buttons above.
+            </p>
+        </field>
+    </record>
+
+    <!-- Allocation Analysis -->
+    <record id="view_assetflow_allocation_pivot" model="ir.ui.view">
+        <field name="name">assetflow.allocation.pivot</field>
+        <field name="model">assetflow.allocation</field>
+        <field name="arch" type="xml">
+            <pivot string="Allocation Analysis">
+                <field name="employee_id" type="row"/>
+                <field name="status" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_assetflow_allocation_graph" model="ir.ui.view">
+        <field name="name">assetflow.allocation.graph</field>
+        <field name="model">assetflow.allocation</field>
+        <field name="arch" type="xml">
+            <graph string="Allocation Trends" type="bar">
+                <field name="department_id"/>
+                <field name="status" type="col"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Allocation Analytics Action -->
+    <record id="action_assetflow_allocation_analytics" model="ir.actions.act_window">
+        <field name="name">Allocation Analytics</field>
+        <field name="res_model">assetflow.allocation</field>
+        <field name="view_mode">pivot,graph,tree</field>
+        <field name="context">{
+            'group_by': 'status',
+        }</field>
+    </record>
+
+    <!-- Maintenance Analysis -->
+    <record id="view_assetflow_maintenance_pivot" model="ir.ui.view">
+        <field name="name">assetflow.maintenance.pivot</field>
+        <field name="model">assetflow.maintenance.request</field>
+        <field name="arch" type="xml">
+            <pivot string="Maintenance Analysis">
+                <field name="priority" type="row"/>
+                <field name="status" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_assetflow_maintenance_graph" model="ir.ui.view">
+        <field name="name">assetflow.maintenance.graph</field>
+        <field name="model">assetflow.maintenance.request</field>
+        <field name="arch" type="xml">
+            <graph string="Maintenance Overview" type="bar">
+                <field name="status"/>
+                <field name="priority" type="col"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Maintenance Analytics Action -->
+    <record id="action_assetflow_maintenance_analytics" model="ir.actions.act_window">
+        <field name="name">Maintenance Analytics</field>
+        <field name="res_model">assetflow.maintenance.request</field>
+        <field name="view_mode">pivot,graph,tree</field>
+        <field name="context">{
+            'group_by': 'status',
+        }</field>
+    </record>
+</odoo>

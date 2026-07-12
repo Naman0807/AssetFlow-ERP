@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Audit Cycle Action (defined first for stat button refs) -->
+    <record id="action_assetflow_audit_cycle" model="ir.actions.act_window">
+        <field name="name">Audit Cycles</field>
+        <field name="res_model">assetflow.audit.cycle</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_filter_open': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Start your first audit cycle
+            </p>
+            <p>
+                Audit cycles let you verify assets in a specific location.
+                Missing assets are automatically flagged as 'Lost' when the cycle closes.
+            </p>
+        </field>
+    </record>
+
+    <!-- Audit Cycle Tree View -->
+    <record id="view_assetflow_audit_cycle_tree" model="ir.ui.view">
+        <field name="name">assetflow.audit.cycle.tree</field>
+        <field name="model">assetflow.audit.cycle</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="scope_department_id"/>
+                <field name="location"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="item_count"/>
+                <field name="verified_count"/>
+                <field name="missing_count"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'closed'"
+                       decoration-warning="status == 'open'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Audit Cycle Form View -->
+    <record id="view_assetflow_audit_cycle_form" model="ir.ui.view">
+        <field name="name">assetflow.audit.cycle.form</field>
+        <field name="model">assetflow.audit.cycle</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_generate_items" string="Generate Audit Items" 
+                            type="object" class="oe_highlight"
+                            invisible="status == 'closed'"/>
+                    <button name="action_close_cycle" string="Close Cycle" 
+                            type="object" class="oe_highlight"
+                            invisible="status == 'closed'"
+                            confirm="Closing this audit cycle is irreversible. Assets marked as missing will be set to 'Lost'. Continue?"/>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Audit Cycle Name"/>
+                        </h1>
+                    </div>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-check-circle" type="action"
+                                name="%(action_assetflow_audit_cycle)d">
+                            <div class="o_stat_info">
+                                <field name="verified_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Verified</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" icon="fa-exclamation-triangle" type="action"
+                                name="%(action_assetflow_audit_cycle)d">
+                            <div class="o_stat_info">
+                                <field name="missing_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Missing</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" icon="fa-broken-chain" type="action"
+                                name="%(action_assetflow_audit_cycle)d">
+                            <div class="o_stat_info">
+                                <field name="damaged_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Damaged</span>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="scope_department_id"/>
+                            <field name="location"/>
+                        </group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="item_count"/>
+                        </group>
+                    </group>
+                    <group string="Auditors">
+                        <field name="auditor_ids" widget="many2many_tags"/>
+                    </group>
+                    <notebook>
+                        <page string="Audit Items" name="items">
+                            <field name="audit_item_ids" 
+                                   context="{'default_cycle_id': id}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Audit Cycle Search View -->
+    <record id="view_assetflow_audit_cycle_search" model="ir.ui.view">
+        <field name="name">assetflow.audit.cycle.search</field>
+        <field name="model">assetflow.audit.cycle</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="scope_department_id"/>
+                <field name="location"/>
+                <separator/>
+                <filter name="filter_open" string="Open" 
+                        domain="[('status', '=', 'open')]"/>
+                <filter name="filter_closed" string="Closed" 
+                        domain="[('status', '=', 'closed')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_status" string="Status" 
+                            context="{'group_by': 'status'}"/>
+                    <filter name="group_by_department" string="Department" 
+                            context="{'group_by': 'scope_department_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Audit Item Tree View (standalone) -->
+    <record id="view_assetflow_audit_item_tree" model="ir.ui.view">
+        <field name="name">assetflow.audit.item.tree</field>
+        <field name="model">assetflow.audit.item</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="cycle_id"/>
+                <field name="asset_id"/>
+                <field name="verification_status" widget="badge"
+                       decoration-success="verification_status == 'verified'"
+                       decoration-danger="verification_status == 'missing'"
+                       decoration-warning="verification_status == 'damaged'"/>
+                <field name="verified_by"/>
+                <field name="verification_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Audit Item Form View -->
+    <record id="view_assetflow_audit_item_form" model="ir.ui.view">
+        <field name="name">assetflow.audit.item.form</field>
+        <field name="model">assetflow.audit.item</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="cycle_id"/>
+                            <field name="asset_id"/>
+                        </group>
+                        <group>
+                            <field name="verification_status"/>
+                            <field name="verified_by"/>
+                            <field name="verification_date"/>
+                        </group>
+                    </group>
+                    <group string="Notes">
+                        <field name="notes" nolabel="1" 
+                               placeholder="Add verification notes..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Audit Item Action -->
+    <record id="action_assetflow_audit_item" model="ir.actions.act_window">
+        <field name="name">Audit Items</field>
+        <field name="res_model">assetflow.audit.item</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
