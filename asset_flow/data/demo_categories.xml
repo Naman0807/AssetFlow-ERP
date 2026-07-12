@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="demo_cat_electronics" model="assetflow.asset.category">
+            <field name="name">Electronics</field>
+            <field name="code">ELEC</field>
+            <field name="warranty_period">24</field>
+            <field name="description">Electronic devices and gadgets</field>
+        </record>
+        <record id="demo_cat_furniture" model="assetflow.asset.category">
+            <field name="name">Furniture</field>
+            <field name="code">FURN</field>
+            <field name="warranty_period">60</field>
+            <field name="description">Office furniture and fixtures</field>
+        </record>
+        <record id="demo_cat_vehicles" model="assetflow.asset.category">
+            <field name="name">Vehicles</field>
+            <field name="code">VEH</field>
+            <field name="warranty_period">36</field>
+            <field name="description">Company vehicles and transport</field>
+        </record>
+        <record id="demo_cat_it" model="assetflow.asset.category">
+            <field name="name">IT Equipment</field>
+            <field name="code">ITEQ</field>
+            <field name="warranty_period">12</field>
+            <field name="description">IT infrastructure and peripherals</field>
+        </record>
+    </data>
+</odoo>
