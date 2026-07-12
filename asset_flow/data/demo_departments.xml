@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="demo_dept_engineering" model="assetflow.department">
+            <field name="name">Engineering</field>
+            <field name="code">ENG</field>
+        </record>
+        <record id="demo_dept_hr" model="assetflow.department">
+            <field name="name">Human Resources</field>
+            <field name="code">HR</field>
+        </record>
+        <record id="demo_dept_marketing" model="assetflow.department">
+            <field name="name">Marketing</field>
+            <field name="code">MKT</field>
+        </record>
+        <record id="demo_dept_operations" model="assetflow.department">
+            <field name="name">Operations</field>
+            <field name="code">OPS</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="demo_asset_macbook" model="assetflow.asset">
+            <field name="name">MacBook Pro 16-inch</field>
+            <field name="category_id" ref="demo_cat_electronics"/>
+            <field name="serial_number">MBP-2024-001</field>
+            <field name="acquisition_date">2024-01-15</field>
+            <field name="acquisition_cost">2499.00</field>
+            <field name="condition">good</field>
+            <field name="location">Engineering Office</field>
+            <field name="is_bookable" eval="True"/>
+            <field name="state">available</field>
+        </record>
+        <record id="demo_asset_dell_monitor" model="assetflow.asset">
+            <field name="name">Dell UltraSharp 27-inch Monitor</field>
+            <field name="category_id" ref="demo_cat_electronics"/>
+            <field name="serial_number">DEL-2024-001</field>
+            <field name="acquisition_date">2024-02-10</field>
+            <field name="acquisition_cost">599.00</field>
+            <field name="condition">good</field>
+            <field name="location">Conference Room A</field>
+            <field name="is_bookable" eval="True"/>
+            <field name="state">available</field>
+        </record>
+        <record id="demo_asset_desk" model="assetflow.asset">
+            <field name="name">Standing Desk Pro</field>
+            <field name="category_id" ref="demo_cat_furniture"/>
+            <field name="serial_number">SDK-2024-001</field>
+            <field name="acquisition_date">2024-01-20</field>
+            <field name="acquisition_cost">899.00</field>
+            <field name="condition">good</field>
+            <field name="location">Engineering Office</field>
+            <field name="is_bookable" eval="False"/>
+            <field name="state">available</field>
+        </record>
+        <record id="demo_asset_chair" model="assetflow.asset">
+            <field name="name">Herman Miller Ergonomic Chair</field>
+            <field name="category_id" ref="demo_cat_furniture"/>
+            <field name="serial_number">HMC-2024-001</field>
+            <field name="acquisition_date">2024-03-05</field>
+            <field name="acquisition_cost">1200.00</field>
+            <field name="condition">good</field>
+            <field name="location">HR Office</field>
+            <field name="is_bookable" eval="False"/>
+            <field name="state">available</field>
+        </record>
+        <record id="demo_asset_projector" model="assetflow.asset">
+            <field name="name">Epson Projector 4K</field>
+            <field name="category_id" ref="demo_cat_electronics"/>
+            <field name="serial_number">EPS-2024-001</field>
+            <field name="acquisition_date">2024-04-12</field>
+            <field name="acquisition_cost">1800.00</field>
+            <field name="condition">fair</field>
+            <field name="location">Conference Room B</field>
+            <field name="is_bookable" eval="True"/>
+            <field name="state">available</field>
+        </record>
+        <record id="demo_asset_thinkpad" model="assetflow.asset">
+            <field name="name">ThinkPad X1 Carbon</field>
+            <field name="category_id" ref="demo_cat_it"/>
+            <field name="serial_number">TLP-2024-001</field>
+            <field name="acquisition_date">2024-02-28</field>
+            <field name="acquisition_cost">1650.00</field>
+            <field name="condition">fair</field>
+            <field name="location">IT Storage</field>
+            <field name="is_bookable" eval="True"/>
+            <field name="state">maintenance</field>
+        </record>
+        <record id="demo_asset_iphone" model="assetflow.asset">
+            <field name="name">iPhone 15 Pro</field>
+            <field name="category_id" ref="demo_cat_electronics"/>
+            <field name="serial_number">IPH-2024-001</field>
+            <field name="acquisition_date">2024-05-01</field>
+            <field name="acquisition_cost">1199.00</field>
+            <field name="condition">good</field>
+            <field name="location">Marketing Office</field>
+            <field name="is_bookable" eval="False"/>
+            <field name="state">available</field>
+        </record>
+        <record id="demo_asset_tv" model="assetflow.asset">
+            <field name="name">Samsung 65-inch Conference TV</field>
+            <field name="category_id" ref="demo_cat_electronics"/>
+            <field name="serial_number">SAM-2024-001</field>
+            <field name="acquisition_date">2024-01-10</field>
+            <field name="acquisition_cost">2200.00</field>
+            <field name="condition">good</field>
+            <field name="location">Main Conference Room</field>
+            <field name="is_bookable" eval="True"/>
+            <field name="state">available</field>
+        </record>
+        <record id="demo_asset_printer" model="assetflow.asset">
+            <field name="name">HP LaserJet Pro Printer</field>
+            <field name="category_id" ref="demo_cat_it"/>
+            <field name="serial_number">HPL-2024-001</field>
+            <field name="acquisition_date">2024-03-15</field>
+            <field name="acquisition_cost">450.00</field>
+            <field name="condition">good</field>
+            <field name="location">Operations Floor</field>
+            <field name="is_bookable" eval="False"/>
+            <field name="state">available</field>
+        </record>
+        <record id="demo_asset_whiteboard" model="assetflow.asset">
+            <field name="name">Interactive Smart Board</field>
+            <field name="category_id" ref="demo_cat_electronics"/>
+            <field name="serial_number">ISB-2024-001</field>
+            <field name="acquisition_date">2024-06-01</field>
+            <field name="acquisition_cost">3500.00</field>
+            <field name="condition">good</field>
+            <field name="location">Training Room</field>
+            <field name="is_bookable" eval="True"/>
+            <field name="state">available</field>
+        </record>
+    </data>
+</odoo>
