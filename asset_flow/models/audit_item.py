@@ -1,4 +1,6 @@
-from odoo import models, fields
+from odoo import models, fields, api
+from odoo.exceptions import ValidationError
+from datetime import date
 
 
 class AssetFlowAuditItem(models.Model):
@@ -23,3 +25,27 @@ class AssetFlowAuditItem(models.Model):
         'hr.employee', string='Verified By'
     )
     verification_date = fields.Date(string='Verification Date')
+
+    def action_verify(self):
+        for record in self:
+            record.write({
+                'verification_status': 'verified',
+                'verified_by': self.env.user.employee_id.id,
+                'verification_date': date.today(),
+            })
+
+    def action_flag_missing(self):
+        for record in self:
+            record.write({
+                'verification_status': 'missing',
+                'verified_by': self.env.user.employee_id.id,
+                'verification_date': date.today(),
+            })
+
+    def action_flag_damaged(self):
+        for record in self:
+            record.write({
+                'verification_status': 'damaged',
+                'verified_by': self.env.user.employee_id.id,
+                'verification_date': date.today(),
+            })

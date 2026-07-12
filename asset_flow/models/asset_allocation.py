@@ -110,3 +110,33 @@ class AssetFlowAllocation(models.Model):
                 ),
                 message_type='notification',
             )
+
+    def action_approve_transfer(self):
+        """Approve transfer: close current allocation so asset becomes available."""
+        self.ensure_one()
+        if self.status != 'transfer_requested':
+            raise ValidationError(_('Only transfer requests can be approved.'))
+        self.write({
+            'status': 'returned',
+            'actual_return_date': fields.Date.context_today(self),
+        })
+        self.asset_id.write({'state': 'available'})
+        self.message_post(
+            body='<b>Transfer Approved:</b> Asset <b>%s</b> returned by %s. Available for reallocation.' % (
+                self.asset_id.asset_tag, self.employee_id.name),
+            message_type='notification',
+        )
+
+    def action_create_new_allocation(self):
+        """Open form to allocate the same asset to a new employee after transfer."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'New Allocation',
+            'res_model': 'assetflow.allocation',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_asset_id': self.asset_id.id,
+            },
+        }

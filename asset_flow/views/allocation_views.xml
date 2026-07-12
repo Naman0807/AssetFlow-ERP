@@ -36,6 +36,14 @@
                     <button name="action_request_transfer" string="Request Transfer" 
                             type="object" class="oe_highlight"
                             invisible="status != 'active'"/>
+                    <button name="action_approve_transfer" string="Approve Transfer" 
+                            type="object" class="oe_highlight"
+                            invisible="status != 'transfer_requested'"
+                            groups="asset_flow.group_assetflow_manager"/>
+                    <button name="action_create_new_allocation" string="Create New Allocation" 
+                            type="object"
+                            invisible="status != 'returned'"
+                            groups="asset_flow.group_assetflow_manager"/>
                     <field name="status" widget="statusbar" 
                            statusbar_visible="active,transfer_requested,returned"/>
                 </header>

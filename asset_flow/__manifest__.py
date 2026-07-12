@@ -36,6 +36,7 @@
         'views/dashboard_views.xml',
         'views/menu_views.xml',
         'reports/discrepancy_report.xml',
+        'reports/asset_register_report.xml',
     ],
     'demo': [],
     'installable': True,
