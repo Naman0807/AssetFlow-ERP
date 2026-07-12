@@ -23,6 +23,7 @@
         'security/security_groups.xml',
         'security/ir.model.access.csv',
         'data/sequence_data.xml',
+        'data/cron_data.xml',
         'views/department_views.xml',
         'views/asset_category_views.xml',
         'views/employee_views.xml',
