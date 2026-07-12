@@ -84,3 +84,29 @@ class AssetFlowAllocation(models.Model):
 
     def action_request_transfer(self):
         self.write({'status': 'transfer_requested'})
+
+    def _cron_check_overdue(self):
+        """Called daily by ir.cron. Creates activities for overdue allocations."""
+        today = date.today()
+        overdue = self.search([
+            ('status', '=', 'active'),
+            ('expected_return_date', '<', today),
+            ('expected_return_date', '!=', False),
+        ])
+        for allocation in overdue:
+            allocation.activity_schedule(
+                'mail.mail_activity_data_todo',
+                user_id=allocation.employee_id.user_id.id,
+                summary='Overdue Asset Return: %s' % allocation.asset_id.name,
+                note='Asset %s was due on %s. Please return it immediately.' % (
+                    allocation.asset_id.asset_tag,
+                    allocation.expected_return_date.strftime('%Y-%m-%d'),
+                ),
+            )
+            allocation.message_post(
+                body='<b>Overdue:</b> Asset <b>%s</b> was due on %s and has not been returned.' % (
+                    allocation.asset_id.asset_tag,
+                    allocation.expected_return_date.strftime('%Y-%m-%d'),
+                ),
+                message_type='notification',
+            )
